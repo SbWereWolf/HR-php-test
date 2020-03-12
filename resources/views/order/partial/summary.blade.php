@@ -8,13 +8,13 @@ $summary = $item['summary'];
 $link = $item['link'];
 $class = '';
 if ($summary->getStatus() === 'новый') {
-    $class = 'warning';
+    $class = 'bg-warning';
 }
 if ($summary->getStatus() === 'подтвержден') {
-    $class = 'info';
+    $class = 'bg-info';
 }
 if ($summary->getStatus() === 'завершен') {
-    $class = 'success';
+    $class = 'bg-success';
 }
 ?>
 <tr class="{{$class}}">

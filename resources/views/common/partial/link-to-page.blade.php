@@ -1,11 +1,17 @@
-<?php /* @var $page */
-$has = !empty($page->link);
+<?php
+/* @var PageLink $page */
+
+use App\Presentation\PageLink;
+
+$link = $page->getLink();
+$has = !empty($link);
+$caption = $page->getCaption();
 ?>
-<td>
+<td class="{{$page->getClass()}}">
     @if ($has)
-        <a href="{{ $page->link }}">{{ $page->text }}</a>
+        <a href="{{ $link }}">{{ $caption }}</a>
     @endif
     @if (!$has)
-        {{ $page->text }}
+        {{ $caption }}
     @endif
 </td>

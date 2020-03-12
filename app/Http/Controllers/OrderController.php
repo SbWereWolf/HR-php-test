@@ -6,26 +6,35 @@ namespace App\Http\Controllers;
 
 use App\Dictionary\Partners;
 use App\Dictionary\Statuses;
+use App\Http\LinkFabric;
 use App\Http\Validation;
 use App\Model\Order;
 use App\Presentation\OrderDetail;
 use App\Presentation\OrderSummary;
+use App\Presentation\Pagination;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
     public function index()
     {
-        return redirect(
-            route('orders-list', ['page' => 0, 'limit' => 20]));
+        $link = (new LinkFabric())->toPage(0);
+
+        return redirect($link);
     }
 
     public function list(string $page, string $limit)
     {
         $current = (int)$page;
-        $amount = (int)$limit;
+        if ($current < 0) {
+            $current = 0;
+        }
+        $perPage = (int)$limit;
+        if (!($perPage > 0)) {
+            $perPage = 20;
+        }
         $orders = Order::with(Order::POSITIONS)
-            ->offset((int)$current * $amount)->limit($amount)
+            ->offset((int)$current * $perPage)->limit($perPage)
             ->get()->all();
 
         $items = [];
@@ -41,7 +50,13 @@ class OrderController extends Controller
             $items[] = ['summary' => $summary, 'link' => $link];
         }
 
-        return view('order.list', ['list' => $items]);
+        $total = Order::query()->count();
+
+        $links = (new Pagination())
+            ->compose($current, $total, $perPage);
+
+        return view('order.list',
+            ['list' => $items, 'pages' => $links]);
 
     }
 
@@ -60,7 +75,8 @@ class OrderController extends Controller
             $order->positions->all());
 
         return view('order.detail',
-            ['detail' => $detail, 'link' => $link, 'number' => $identity,
+            ['detail' => $detail, 'link' => $link,
+                'number' => $identity,
                 'statuses' => $statuses, 'partners' => $partners]);
     }
 

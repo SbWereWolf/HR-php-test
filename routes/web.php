@@ -11,12 +11,16 @@
 |
 */
 
+use App\Http\Controllers\OrderController;
+use App\Http\IRouting;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', 'OrderController@index')->name('start');
-Route::get('/orders-list/{page}/{limit}', 'OrderController@list')
-    ->name('orders-list');
-Route::get('/order-detail/{id}', 'OrderController@edit')
+Route::get('/', OrderController::class . '@index')->name('start');
+Route::get(
+    '/orders-list/{' . IRouting::PAGE . '}/{' . IRouting::LIMIT . '}',
+    OrderController::class . '@list')
+    ->name(IRouting::LIST);
+Route::get('/order-detail/{id}', OrderController::class . '@edit')
     ->name('view-order-detail');
-Route::post('/order-detail/{id}', 'OrderController@store')
+Route::post('/order-detail/{id}', OrderController::class . '@store')
     ->name('write-order-detail');
