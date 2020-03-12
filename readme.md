@@ -13,6 +13,23 @@
 - `php artisan key:generate`
 - использовать дамп БД `dump.sql`
 
+### Пояснение
+Миграции сразу не завелись, позже разобрался что проблема в настройке 
+config/database.php, 
+[надо было добавить](https://stackoverflow.com/questions/49949526/laravel-mysql-migrate-error):
+```$php
+        'modes'  => [
+            'ONLY_FULL_GROUP_BY',
+            'STRICT_TRANS_TABLES',
+            'NO_ZERO_IN_DATE',
+            'NO_ZERO_DATE',
+            'ERROR_FOR_DIVISION_BY_ZERO',
+            'NO_ENGINE_SUBSTITUTION',
+        ],
+```
+Переделывать уже не стал, поэтому нет миграции для таблицы `status`, 
+необходимо развернуть базу из дампа.
+
 ## Дополнительная информация
 Статусты заказа:
 - 0 новый
