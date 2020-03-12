@@ -6,56 +6,78 @@
     <meta name="viewport" content="width=device-width,
         initial-scale=1, shrink-to-fit=no">
     <title>Order detail</title>
+
+    @include('common.partial.header-css')
 </head>
 <body>
-<form action="/order/store" method="post" class="form-horizontal">
-    <h2>Редактировать заказ</h2>
-
-    @include('common.partial.errors')
-
-    <div class="controls">
-        <?php /* @var $order */ ?>
-        <div class="col-md-12">
-            <div class="form-group">
-                <label>email_клиента
-                    <input type="text" value="{{ $order->customer }}"/>
-                </label>
-            </div>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 col-md-2 col-xs-1"></div>
+        <div class="col-4 col-md-8 col-xs-10">
+            <a href="{{route('start')}}">Вернуться к списку заказов</a>
+            <h2>Редактировать заказ #{{$number}}</h2>
+            <form action="{{$link}}" method="post"
+                  class="form-horizontal">
+                @include('common.partial.errors')
+                <div class="controls">
+                    <?php
+                    /* @var OrderDetail $detail */
+                    use App\Presentation\OrderDetail;
+                    /* @var array $statuses */
+                    /* @var array $partners */
+                    ?>
+                    <div class="form-group">
+                        <label>Клиент
+                            <input type="text" name="customer"
+                                   value="{{ $detail->getCustomer() }}"/>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>Партнер
+                            <select name="partner">
+                                <?php $chosenPartner =
+                                    $detail->getPartner() ?>
+                                @foreach ($partners as $partner)
+                                    @include('order.partial.partner')
+                                @endforeach
+                            </select>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>Продукты </label>
+                        <?php $products = $detail->getProducts() ?>
+                        @if (count($products) > 0 )
+                            <ul>
+                                @foreach ($products as $product)
+                                    @include('order.partial.product')
+                                @endforeach
+                            </ul>
+                        @endif
+                    </div>
+                    <div class="form-group">
+                        <label>Статус
+                            <select name="status">
+                                <?php $state = $detail->getStatus() ?>
+                                @foreach ($statuses as $status)
+                                    @include('order.partial.status')
+                                @endforeach
+                            </select>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>Стоимость <span>
+                        {{ $detail->getCost() }} руб.</span>
+                        </label>
+                    </div>
+                    <input type="submit" class="btn btn-success btn-send"
+                           value="Сохранить"/>
+                </div>
+                {{ csrf_field() }}
+            </form>
         </div>
-        <div class="col-md-12">
-            <div class="form-group">
-                <label>партнер
-                    <input type="text" value="{{ $order->partner }}"/>
-                </label>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <div class="form-group">
-                <label>продукты <span>{{ $order->positions }}</span>
-                </label>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <div class="form-group">
-                <label>статус заказа
-                    <input type="text" value="{{ $order->status  }}"/>
-                </label>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <div class="form-group">
-                <label>стоимость заказ <span>{{ $order->cost }}</span>
-                </label>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <input type="submit" class="btn btn-success btn-send"
-                   value="Сохранить"/>
-        </div>
-
-        {{ csrf_field() }}
-
+        <div class="col-lg-4 col-md-2 col-xs-1"></div>
     </div>
-</form>
+</div>
 </body>
+@include('common.partial.footer-js')
 </html>

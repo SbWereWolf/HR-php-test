@@ -6,28 +6,38 @@
     <meta name="viewport" content="width=device-width,
         initial-scale=1, shrink-to-fit=no">
     <title>List of orders</title>
+
+    @include('common.partial.header-css')
 </head>
 <body>
-<table>
-    <thead>
-    <tr>
-        <th>ид_заказа</th>
-        <th>название_партнера</th>
-        <th>стоимость_заказа</th>
-        <th>наименование_состав_заказа</th>
-        <th>статус_заказа</th>
-    </tr>
-    </thead>
-    <tbody>
-    @isset($list)
-        @foreach ($list as $item)
-            @include('order.partial.summary')
-        @endforeach
-    @endisset
-    </tbody>
-</table>
-@isset($pages)
-    @include('common.partial.pagination')
-@endisset
+<div class="container">
+    <div class="row">
+        <h1>Список заказов</h1>
+        <div class="table-responsive">
+            <table class="table-hover table-bordered">
+                <thead>
+                <tr>
+                    <th>ид_заказа</th>
+                    <th>название_партнера</th>
+                    <th>стоимость_заказа</th>
+                    <th>наименование_состав_заказа</th>
+                    <th>статус_заказа</th>
+                </tr>
+                </thead>
+                <tbody>
+                @isset($list)
+                    @foreach ($list as $item)
+                        @include('order.partial.summary')
+                    @endforeach
+                @endisset
+                </tbody>
+            </table>
+            @isset($pages)
+                @include('common.partial.pagination')
+            @endisset
+        </div>
+    </div>
+</div>
 </body>
+@include('common.partial.footer-js')
 </html>

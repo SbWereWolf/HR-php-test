@@ -13,5 +13,10 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', 'OrderController@index')->name('list');
-Route::get('/{id}', 'OrderController@edit')->name('detail');
+Route::get('/', 'OrderController@index')->name('start');
+Route::get('/orders-list/{page}/{limit}', 'OrderController@list')
+    ->name('orders-list');
+Route::get('/order-detail/{id}', 'OrderController@edit')
+    ->name('view-order-detail');
+Route::post('/order-detail/{id}', 'OrderController@store')
+    ->name('write-order-detail');
