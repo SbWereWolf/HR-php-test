@@ -1,18 +1,26 @@
-<?php /* @var $item */ ?>
+<?php
+/* @var $item */
+
+use App\Presentation\OrderSummary;
+
+/* @var OrderSummary $summary */
+$summary = $item['summary'];
+$link = $item['link'];
+?>
 <tr>
     <td>
-        <a href="{{$item->link}}">{{$item->id}}</a>
+        <a href="{{$link}}">{{$summary->getId()}}</a>
     </td>
     <td>
-        {{$item->partner}}
+        {{$summary->getPartner()}}
     </td>
     <td>
-        {{$item->cost}}
+        {{$summary->getCost()}}
     </td>
     <td>
-        {{$item->content}}
+        {{$summary->getProducts()}}
     </td>
     <td>
-        {{$item->status}}
+        {{$summary->getStatus()}}
     </td>
 </tr>

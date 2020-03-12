@@ -4,8 +4,9 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class Status extends Model
 {
     const ID = 'id';
-    protected $table = 'products';
+
+    protected $table = 'status';
 }
