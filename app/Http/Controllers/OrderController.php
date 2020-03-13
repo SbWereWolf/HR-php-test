@@ -34,7 +34,7 @@ class OrderController extends Controller
             $perPage = 20;
         }
         $orders = Order::with(Order::POSITIONS)
-            ->offset((int)$current * $perPage)->limit($perPage)
+            ->offset($current * $perPage)->limit($perPage)
             ->get()->all();
 
         $items = [];

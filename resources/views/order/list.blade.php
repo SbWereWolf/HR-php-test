@@ -12,6 +12,7 @@
 <body>
 <div class="container">
     <div class="row">
+        <a href="{{route('weather')}}">Посмотреть погоду</a>
         <h1>Список заказов</h1>
         <div class="table-responsive">
             <table class="table-hover table-bordered">

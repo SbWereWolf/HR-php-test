@@ -6,6 +6,13 @@ use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
+    public function testWeather()
+    {
+        $response = $this->get('/weather/');
+
+        $response->assertStatus(200);
+    }
+
     public function testStartRoute()
     {
         $response = $this->get('/');

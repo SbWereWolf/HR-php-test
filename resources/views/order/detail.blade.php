@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-lg-4 col-md-2 col-xs-1"></div>
         <div class="col-4 col-md-8 col-xs-10">
-            <a href="{{route('start')}}">Вернуться к списку заказов</a>
+            @include('common.partial.come-back')
             <h2>Редактировать заказ #{{$number}}</h2>
             <form action="{{$link}}" method="post"
                   class="form-horizontal">

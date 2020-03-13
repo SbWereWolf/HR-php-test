@@ -12,7 +12,9 @@
 		"fideloper/proxy": "~3.3",
 		"fzaninotto/faker": "^1.7",
 		"laravel/framework": "5.5.*",
-		"laravel/tinker": "~1.0"
+		"laravel/tinker": "~1.0",
+		"ext-curl": "*",
+		"ext-json": "*"
 	},
 	"require-dev": {
 		"filp/whoops": "~2.0",
