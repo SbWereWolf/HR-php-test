@@ -4,10 +4,9 @@
 namespace App\Presentation;
 
 
-use App\Http\IRouting;
 use App\Http\LinkFabric;
 
-class Pagination implements IRouting
+class Pagination
 {
     const WARNING = 'bg-warning';
     const SUCCESS = 'bg-success';
@@ -49,7 +48,7 @@ class Pagination implements IRouting
         $placesGap = $this->getGap();
         $usePredefined = ($current - $placesGap - $pagesBefore) > 0;
         if ($usePredefined) {
-            $this->usePredefinedForStrating($link);
+            $this->usePredefinedForStarting($link);
         }
 
         $total = (int)ceil($amount / $capacity);
@@ -108,7 +107,7 @@ class Pagination implements IRouting
     /**
      * @param LinkFabric $link
      */
-    public function usePredefinedForStrating(LinkFabric $link)
+    public function usePredefinedForStarting(LinkFabric $link)
     {
         $this->places[] = PageLink::make(
             $link->toPage(0), 1, self::WARNING);

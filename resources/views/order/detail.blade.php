@@ -13,7 +13,7 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-4 col-md-2 col-xs-1"></div>
-        <div class="col-4 col-md-8 col-xs-10">
+        <div class="col-lg-4 col-md-8 col-xs-10">
             @include('common.partial.come-back')
             <h2>Редактировать заказ #{{$number}}</h2>
             <form action="{{$link}}" method="post"
