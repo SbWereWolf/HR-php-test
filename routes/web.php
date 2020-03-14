@@ -27,4 +27,5 @@ Route::post('/order-detail/{id}', 'OrderController@store')
 Route::get('/weather/', 'WeatherController@index')
     ->name('weather');
 
-//weather
+Route::get('/product/', 'ProductController@index')
+    ->name('product');

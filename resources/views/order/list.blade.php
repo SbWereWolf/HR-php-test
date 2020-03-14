@@ -12,7 +12,14 @@
 <body>
 <div class="container">
     <div class="row">
-        <a href="{{route('weather')}}">Посмотреть погоду</a>
+        <ul>
+            <li>
+                <a href="{{route('weather')}}">Посмотреть погоду</a>
+            </li>
+            <li>
+                <a href="{{route('product')}}">Изменить цены на продукты</a>
+            </li>
+        </ul>
         <h1>Список заказов</h1>
         <div class="table-responsive">
             <table class="table-hover table-bordered">
