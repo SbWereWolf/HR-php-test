@@ -95,8 +95,17 @@ class OrderController extends Controller
         $order->client_email = $customer;
         $order->partner_id = $partner;
         $order->status = $status;
-        $order->save();
+        $isSuccess = $order->save();
 
-        return redirect(route('start'));
+        $result = null;
+        if ($isSuccess) {
+            $result = redirect(route('start'));
+        }
+        if (!$isSuccess) {
+            $result = redirect(route('view-order-detail'))
+                ->with('error', 'Сбой сохранения заказа');
+        }
+
+        return $result;
     }
 }
