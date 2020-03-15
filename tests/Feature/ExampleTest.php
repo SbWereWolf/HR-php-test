@@ -2,10 +2,23 @@
 
 namespace Tests\Feature;
 
+use App\Business\Notifier;
+use App\Http\Controllers\OrderController;
+use App\Model\Order;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
+    public function testNotifier()
+    {
+        /* @var Order $order */
+        $order = Order::query()->find(6);
+        $notifier = new Notifier(OrderController::COMPLETED);
+        $occur = $notifier->processStatusChange($order, 10);
+
+        $this->assertTrue($occur);
+    }
+
     public function testWeather()
     {
         $response = $this->get('/weather/');

@@ -4,6 +4,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Business\Notifier;
 use App\Dictionary\Partners;
 use App\Dictionary\Statuses;
 use App\Http\LinkFabric;
@@ -16,6 +17,34 @@ use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
+    const COMPLETED = 20;
+
+    /**
+     * @param string $limit
+     * @return int
+     */
+    private static function initPerPage(string $limit): int
+    {
+        $perPage = (int)$limit;
+        if (!($perPage > 0)) {
+            $perPage = 20;
+        }
+        return $perPage;
+    }
+
+    /**
+     * @param string $page
+     * @return int
+     */
+    private static function initCurrent(string $page): int
+    {
+        $current = (int)$page;
+        if ($current < 0) {
+            $current = 0;
+        }
+        return $current;
+    }
+
     public function index()
     {
         $link = (new LinkFabric())->toPage(0);
@@ -25,15 +54,9 @@ class OrderController extends Controller
 
     public function list(string $page, string $limit)
     {
-        $current = (int)$page;
-        if ($current < 0) {
-            $current = 0;
-        }
-        $perPage = (int)$limit;
-        if (!($perPage > 0)) {
-            $perPage = 20;
-        }
-        $orders = Order::with(Order::POSITIONS)
+        $current = self::initCurrent($page);
+        $perPage = self::initPerPage($limit);
+        $orders = Order::query()
             ->offset($current * $perPage)->limit($perPage)
             ->get()->all();
 
@@ -50,10 +73,10 @@ class OrderController extends Controller
             $items[] = ['summary' => $summary, 'link' => $link];
         }
 
-        $total = Order::query()->count();
+        $amount = Order::query()->count();
 
         $links = (new Pagination())
-            ->compose($current, $total, $perPage);
+            ->compose($current, $amount, $perPage);
 
         return view('order.list',
             ['list' => $items, 'pages' => $links]);
@@ -68,7 +91,8 @@ class OrderController extends Controller
         $identity = (int)$id;
         $link = route('write-order-detail', ['id' => $identity]);
 
-        $order = Order::with(Order::POSITIONS)->find($identity);
+        /* @var Order $order */
+        $order = Order::query()->find($identity);
 
         $detail = OrderDetail::make(
             $order, $order->partner, $order->state,
@@ -90,7 +114,9 @@ class OrderController extends Controller
         $status = (int)($parameters['status'] ?? 0);
 
         $identity = (int)$id;
+        /* @var Order $order */
         $order = Order::query()->find($identity);
+        $was = (int)$order->status;
 
         $order->client_email = $customer;
         $order->partner_id = $partner;
@@ -100,6 +126,9 @@ class OrderController extends Controller
         $result = null;
         if ($isSuccess) {
             $result = redirect(route('start'));
+
+            $notifier = new Notifier(self::COMPLETED);
+            $notifier->processStatusChange($order, $was);
         }
         if (!$isSuccess) {
             $result = redirect(route('view-order-detail'))
