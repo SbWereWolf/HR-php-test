@@ -12,7 +12,6 @@ use App\Http\Validation;
 use App\Model\Order;
 use App\Presentation\OrderDetail;
 use App\Presentation\OrderSummary;
-use App\Presentation\Pagination;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -32,33 +31,20 @@ class OrderController extends Controller
         return $perPage;
     }
 
-    /**
-     * @param string $page
-     * @return int
-     */
-    private static function initCurrent(string $page): int
-    {
-        $current = (int)$page;
-        if ($current < 0) {
-            $current = 0;
-        }
-        return $current;
-    }
-
     public function index()
     {
-        $link = (new LinkFabric())->toPage(0);
+        $link = (new LinkFabric())->toPage(1);
 
         return redirect($link);
     }
 
-    public function list(string $page, string $limit)
+    public function list(string $limit)
     {
-        $current = self::initCurrent($page);
         $perPage = self::initPerPage($limit);
-        $orders = Order::query()
-            ->offset($current * $perPage)->limit($perPage)
-            ->get()->all();
+        $pagination = Order::query()
+            ->orderBy('id')->paginate($perPage);
+
+        $orders = $pagination->items();
 
         $items = [];
         foreach ($orders as $order) {
@@ -73,14 +59,10 @@ class OrderController extends Controller
             $items[] = ['summary' => $summary, 'link' => $link];
         }
 
-        $amount = Order::query()->count();
-
-        $links = (new Pagination())
-            ->compose($current, $amount, $perPage);
+        $links = $pagination->links();
 
         return view('order.list',
-            ['list' => $items, 'pages' => $links]);
-
+            ['list' => $items, 'pagination' => $links]);
     }
 
     public function edit(string $id)

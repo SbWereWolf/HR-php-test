@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'OrderController@index')->name('start');
 Route::get(
-    '/orders-list/{' . IRouting::PAGE . '}/{' . IRouting::LIMIT . '}',
+    '/orders-list/{' . IRouting::LIMIT . '}',
     'OrderController@list')
     ->name(IRouting::LIST);
 Route::get('/order-detail/{id}', 'OrderController@edit')

@@ -32,7 +32,7 @@
                 @endisset
                 </tbody>
             </table>
-            {{$paginate}}
+            {{$pagination}}
         </div>
     </div>
 </div>

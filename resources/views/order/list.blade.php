@@ -40,9 +40,7 @@
                 @endisset
                 </tbody>
             </table>
-            @isset($pages)
-                @include('common.partial.pagination')
-            @endisset
+            {{$pagination}}
         </div>
     </div>
 </div>

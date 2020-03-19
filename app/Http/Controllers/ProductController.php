@@ -7,7 +7,6 @@ namespace App\Http\Controllers;
 use App\Model\Product;
 use App\Presentation\ProductDetail;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\Paginator;
 
 class ProductController extends Controller
 {
@@ -15,13 +14,10 @@ class ProductController extends Controller
 
     public function index()
     {
-        $current = Paginator::resolveCurrentPage('page') - 1;
+        $pagination = Product::query()
+            ->orderBy('name')->paginate(self::ITEMS_PER_PAGE);
 
-        $products = Product::with(Product::VENDOR)
-            ->orderBy('name')
-            ->offset($current * self::ITEMS_PER_PAGE)
-            ->limit(self::ITEMS_PER_PAGE)
-            ->get()->all();
+        $products = $pagination->items();
 
         $items = [];
         foreach ($products as $product) {
@@ -29,16 +25,10 @@ class ProductController extends Controller
             $items[] = ProductDetail::make($product, $product->vendor);
         }
 
-        /* При использовании пагинации почему то перестаёт работать
-           Product::with(Product::VENDOR),
-           обращение к $product->vendor возвращает null,
-           поэтому пагинация "дублируется" (как бы)
-        */
-        $paginate = ((Product::paginate(self::ITEMS_PER_PAGE))
-            ->links());
+        $links = $pagination->links();
 
         return view('product.list',
-            ['list' => $items, 'paginate' => $paginate]);
+            ['list' => $items, 'pagination' => $links]);
     }
 
     public function store(Request $request, string $id)
